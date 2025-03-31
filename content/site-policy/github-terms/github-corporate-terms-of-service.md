@@ -9,8 +9,13 @@ topics:
   - Policy
   - Legal
 ---
+<!-- markdownlint-disable search-replace -->
 
-_These terms apply to GitHub.com customers who have executed agreements in place referencing the Corporate Terms of Service. All other business or institution customers are directed to [github.com/customer-terms](https://github.com/customer-terms) for current terms._
+{% note %}
+
+**Note:** The GitHub Corporate Terms of Service were deprecated effective 30 November 2021, and are no longer used for new customers. The terms below apply _only_ to those GitHub customers with executed agreements that explicitly reference the Corporate Terms of Service. All other business or institution customers are directed to the GitHub Customer Agreement terms available at [github.com/customer-terms](https://github.com/customer-terms).
+
+{% endnote %}
 
 ## GitHub Corporate Terms of Service
 
@@ -70,8 +75,6 @@ This Agreement applies to the following GitHub offerings, as further defined bel
 
 **"Professional Services"** means training, consulting, or implementation services that GitHub provides to Customer pursuant to a mutually executed SOW. Professional Services do not include Support.
 
-**"Professional Services Credits"** means the upfront payment method for purchasing Professional Services (exclusive of travel and lodging expenses) that Customer may use over a period of twelve (12) months (unless otherwise stated in an Order Form) for Professional Services. Any Professional Services Credits that remain unused at the end of twelve (12) months from the date of purchase (or as otherwise stated in an Order Form) are automatically canceled and are non-refundable.
-
 **“Public Repository”** means a repository whose Content is visible to All Users.
 
 **"Representatives"** means a Party’s employees, officers, agents, independent contractors, consultants, and legal and financial advisors.
@@ -106,7 +109,7 @@ In order to create an account, Customer must adhere to the following:
 
 -	A User’s login may not be shared by multiple people.
 
-- Customer must not use the Products (a) in violation of export control or sanctions laws of the United States or any other applicable jurisdiction; (b) if it is located in or ordinarily resident in a country or territory subject to comprehensive to comprehensive sanctions administered by the U.S. Office of Foreign Assets Control (OFAC); or (c) if it is or is working on behalf of a [Specially Designated National (SDN)](https://www.treasury.gov/resource-center/sanctions/SDN-List/Pages/default.aspx) or a person subject to similar blocking or denied party prohibitions. For more information, please see our [Export Controls policy](/site-policy/other-site-policies/github-and-trade-controls).
+- Customer must not use the Products (a) in violation of export control or sanctions laws of the United States or any other applicable jurisdiction; (b) if it is located in or ordinarily resident in a country or territory subject to comprehensive sanctions administered by the U.S. Office of Foreign Assets Control (OFAC); or (c) if it is or is working on behalf of a [Specially Designated National (SDN)](https://www.treasury.gov/resource-center/sanctions/SDN-List/Pages/default.aspx) or a person subject to similar blocking or denied party prohibitions. For more information, please see our [Export Controls policy](/site-policy/other-site-policies/github-and-trade-controls).
 
 ### 3. Account Security
 
@@ -178,7 +181,7 @@ GitHub considers Customer Content in Customer’s Private Repositories to be Cus
 
 ### 3. Access
 
-GitHub personnel may only access Customer's Private Repositories in the situations described in our [Privacy Statement](/site-policy/privacy-policies/github-privacy-statement#repository-contents). 
+GitHub personnel may only access Customer's Private Repositories in the situations described in our [Privacy Statement](/site-policy/privacy-policies/github-privacy-statement#repository-contents).
 
 Customer may choose to enable additional access to its Private Repositories. For example, Customer may enable various GitHub services or features that require additional rights to Customer Content in Private Repositories. These rights may vary depending on the service or feature, but GitHub will continue to treat Customer Content in Customer’s Private Repositories as Customer’s Confidential Information. If those services or features require rights in addition to those it needs to provide the Service, GitHub will provide an explanation of those rights.
 
@@ -190,7 +193,7 @@ GitHub will provide notice regarding our access to private repository content, u
 
 ### 1. GitHub's Rights to Content
 
-The look and feel of the Service is copyright © GitHub, Inc. All rights reserved. Customer may not duplicate, copy, or reuse any portion of the HTML/CSS, Javascript, or visual design elements or concepts without express written permission from GitHub.
+The look and feel of the Service is copyright © GitHub, Inc. All rights reserved. Customer may not duplicate, copy, or reuse any portion of the HTML/CSS, JavaScript, or visual design elements or concepts without express written permission from GitHub.
 
 ### 2. GitHub Trademarks and Logos
 
@@ -232,11 +235,7 @@ Customer’s Affiliates are authorized to use the Products in accordance with th
 
 Customer may obtain additional Subscription Licenses under this Agreement by submitting a request through the Service or via its sales team. If Customer purchases the additional Subscription Licenses, Customer must pay the then-currently applicable Fees for them, prorated for the balance of the applicable Subscription Term. Upon renewal of Customer’s Subscription Licenses for another Subscription Term, GitHub will invoice all Subscription Licenses at once on an annual basis unless otherwise specified in an Order Form.
 
-### 3. Professional Services Credits.
-
-If Customer uses Professional Services Credits to pay for Professional Services, then upon Customer’s receipt of an SOW, the applicable Professional Services Credits will be deducted from Customer’s Professional Services Credits balance. Customer is responsible for ensuring that its purchase order issued to GitHub for the Professional Services reflects the pricing set forth in the SOW. If there is any difference in pricing listed in the SOW and the pricing listed in Customer’s purchase order, the pricing in the SOW will control. The Parties agree that SOWs payable via Professional Services Credits do not have to be signed by either Party to be valid and enforceable. All Professional Services Credits must be used within the time set forth in the Order Form or will automatically be canceled and are non-refundable. Customer may not apply Professional Services Credits to travel and lodging expenses, which must be invoiced separately.
-
-### 4. Authorization
+### 3. Authorization
 
 Customer authorizes GitHub to charge the on-file credit card, PayPal account, or other approved methods of payment for Fees.
 
@@ -326,7 +325,7 @@ Upon Customer’s request for Professional Services, GitHub will provide an SOW 
 
 GitHub reserves the right, at its sole discretion, to amend this Agreement at any time and will update this Agreement in the event of any such amendments. GitHub will notify Customer of material changes to this Agreement, such as price increases, at least 30 days prior to the change taking effect by posting a notice on the Service or sending email to the primary email address specified in your GitHub account. Customer's continued use of the Service after those 30 days constitutes agreement to those revisions of this Agreement. For any other modifications, Customer's continued use of the Service constitutes agreement to our revisions of this Agreement. Customer can view all changes to this Agreement in our [Site Policy](https://github.com/github/site-policy) repository.
 
-GitHub changes the Service via Updates and addition of new features. Nothwithstanding the foregoing, GitHub reserves the right at any time to modify or discontinue, temporarily or permanently, the Service (or any part of it) with or without notice.
+GitHub changes the Service via Updates and addition of new features. Notwithstanding the foregoing, GitHub reserves the right at any time to modify or discontinue, temporarily or permanently, the Service (or any part of it) with or without notice.
 
 ## S. Support
 

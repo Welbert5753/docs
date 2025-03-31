@@ -11,10 +11,9 @@ redirect_from:
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 ---
- 
+
 {% data reusables.actions.enterprise-github-hosted-runners %}
 
 ## About YAML syntax for workflows
@@ -25,13 +24,11 @@ You must store workflow files in the `.github/workflows` directory of your repos
 
 ## `name`
 
-The name of your workflow. {% data variables.product.prodname_dotcom %} displays the names of your workflows on your repository's "Actions" tab. If you omit `name`, {% data variables.product.prodname_dotcom %} sets it to the workflow file path relative to the root of the repository.
-
-{% ifversion actions-run-name %}
+{% data reusables.actions.workflows.workflow-syntax-name %}
 
 ## `run-name`
 
-The name for workflow runs generated from the workflow. {% data variables.product.prodname_dotcom %} displays the workflow run name in the list of workflow runs on your repository's "Actions" tab. If `run-name` is omitted or is only whitespace, then the run name is set to event-specific information for the workflow run. For example, for a workflow triggered by a `push` or `pull_request` event, it is set as the commit message.
+The name for workflow runs generated from the workflow. {% data variables.product.prodname_dotcom %} displays the workflow run name in the list of workflow runs on your repository's "Actions" tab. If `run-name` is omitted or is only whitespace, then the run name is set to event-specific information for the workflow run. For example, for a workflow triggered by a `push` or `pull_request` event, it is set as the commit message or the title of the pull request.
 
 This value can include expressions and can reference the [`github`](/actions/learn-github-actions/contexts#github-context) and [`inputs`](/actions/learn-github-actions/contexts#inputs-context) contexts.
 
@@ -44,7 +41,6 @@ run-name: Deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
 ```
 
 {% endraw %}
-{% endif %}
 
 ## `on`
 
@@ -71,8 +67,6 @@ run-name: Deploy to ${{ inputs.deploy_target }} by @${{ github.actor }}
 {% data reusables.actions.workflows.section-triggering-a-workflow-schedule %}
 
 ## `on.workflow_call`
-
-{% data reusables.actions.reusable-workflows-enterprise-beta %}
 
 Use `on.workflow_call` to define the inputs and outputs for a reusable workflow. You can also map the secrets that are available to the called workflow. For more information on reusable workflows, see "[AUTOTITLE](/actions/using-workflows/reusing-workflows)."
 
@@ -222,11 +216,27 @@ A boolean specifying whether the input must be supplied.
 
 ## `on.workflow_dispatch.inputs.<input_id>.type`
 
-The value of this parameter is a string specifying the data type of the input. This must be one of: `boolean`, `choice`, `number`, or `string`.
+The value of this parameter is a string specifying the data type of the input. This must be one of: `boolean`, `choice`, `number`, `environment` or `string`.
 
 ## `permissions`
 
 {% data reusables.actions.jobs.section-assigning-permissions-to-jobs %}
+
+### Defining access for the `GITHUB_TOKEN` scopes
+
+{% data reusables.actions.github-token-available-permissions %}
+
+#### Changing the permissions in a forked repository
+
+{% data reusables.actions.forked-write-permission %}
+
+### Setting the `GITHUB_TOKEN` permissions for all jobs in a workflow
+
+You can specify `permissions` at the top level of a workflow, so that the setting applies to all jobs in the workflow.
+
+#### Example: Setting the `GITHUB_TOKEN` permissions for an entire workflow
+
+{% data reusables.actions.jobs.setting-permissions-all-jobs-example %}
 
 ## `env`
 
@@ -251,6 +261,14 @@ env:
 
 {% data reusables.actions.jobs.setting-default-values-for-jobs-defaults-run %}
 
+## `defaults.run.shell`
+
+{% data reusables.actions.jobs.setting-default-values-for-jobs-defaults-run-shell %}
+
+## `defaults.run.working-directory`
+
+{% data reusables.actions.jobs.setting-default-values-for-jobs-defaults-run-working-directory %}
+
 ## `concurrency`
 
 {% data reusables.actions.jobs.section-using-concurrency %}
@@ -271,7 +289,17 @@ env:
 
 {% data reusables.actions.jobs.section-assigning-permissions-to-jobs-specific %}
 
-### Example: Setting permissions for a specific job
+{% data reusables.actions.github-token-scope-descriptions %}
+
+### Defining access for the `GITHUB_TOKEN` scopes
+
+{% data reusables.actions.github-token-available-permissions %}
+
+#### Changing the permissions in a forked repository
+
+{% data reusables.actions.forked-write-permission %}
+
+#### Example: Setting the `GITHUB_TOKEN` permissions for one job in a workflow
 
 {% data reusables.actions.jobs.setting-permissions-specific-jobs-example %}
 
@@ -305,7 +333,7 @@ A `map` of variables that are available to all steps in the job. You can set var
 
 {% data reusables.repositories.actions-env-var-note %}
 
-## Example of `jobs.<job_id>.env`
+### Example of `jobs.<job_id>.env`
 
 ```yaml
 jobs:
@@ -322,6 +350,14 @@ jobs:
 
 {% data reusables.actions.jobs.setting-default-values-for-jobs-defaults-job-run %}
 
+## `jobs.<job_id>.defaults.run.shell`
+
+{% data reusables.actions.jobs.setting-default-values-for-jobs-defaults-run-shell %}
+
+## `jobs.<job_id>.defaults.run.working-directory`
+
+{% data reusables.actions.jobs.setting-default-values-for-jobs-defaults-run-working-directory %}
+
 ### Example: Setting default `run` step options for a job
 
 {% data reusables.actions.jobs.setting-default-run-value-for-job-example %}
@@ -330,7 +366,7 @@ jobs:
 
 A job contains a sequence of tasks called `steps`. Steps can run commands, run setup tasks, or run an action in your repository, a public repository, or an action published in a Docker registry. Not all steps run actions, but all actions run as a step. Each step runs in its own process in the runner environment and has access to the workspace and filesystem. Because steps run in their own process, changes to environment variables are not preserved between steps. {% data variables.product.prodname_dotcom %} provides built-in steps to set up and complete a job.
 
-You can run an unlimited number of steps as long as you are within the workflow usage limits. For more information, see {% ifversion fpt or ghec or ghes %}"[AUTOTITLE](/actions/learn-github-actions/usage-limits-billing-and-administration)" for {% data variables.product.prodname_dotcom %}-hosted runners and {% endif %}"[AUTOTITLE](/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#usage-limits){% ifversion fpt or ghec or ghes %}" for self-hosted runner usage limits.{% elsif ghae %}."{% endif %}
+{% data variables.product.prodname_dotcom %} only displays the first 1,000 checks, however, you can run an unlimited number of steps as long as you are within the workflow usage limits. For more information, see "[AUTOTITLE](/actions/learn-github-actions/usage-limits-billing-and-administration)" for {% data variables.product.prodname_dotcom %}-hosted runners and "[AUTOTITLE](/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#usage-limits)" for self-hosted runner usage limits.
 
 ### Example of `jobs.<job_id>.steps`
 
@@ -417,7 +453,7 @@ jobs:
 
 {% endraw %}
 
-For more information, see "[AUTOTITLE](/actions/learn-github-actions/contexts#context-availability)" and "[AUTOTITLE](/actions/security-guides/encrypted-secrets)."
+For more information, see "[AUTOTITLE](/actions/learn-github-actions/contexts#context-availability)" and "[AUTOTITLE](/actions/security-guides/using-secrets-in-github-actions)."
 
 ## `jobs.<job_id>.steps[*].name`
 
@@ -488,15 +524,7 @@ jobs:
 
 The path to the directory that contains the action in your workflow's repository. You must check out your repository before using the action.
 
-```yaml
-jobs:
-  my_first_job:
-    steps:
-      - name: Check out repository
-        uses: {% data reusables.actions.action-checkout %}
-      - name: Use local my-action
-        uses: ./.github/actions/my-action
-```
+{% data reusables.actions.workflows.section-referencing-an-action-from-the-same-repository %}
 
 ### Example: Using a Docker Hub action
 
@@ -546,7 +574,7 @@ jobs:
 
 ### Example: Using an action inside a different private repository than the workflow
 
-Your workflow must checkout the private repository and reference the action locally. Generate a {% data variables.product.pat_generic %} and add the token as an encrypted secret. For more information, see "[AUTOTITLE](/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)" and "[AUTOTITLE](/actions/security-guides/encrypted-secrets)."
+Your workflow must checkout the private repository and reference the action locally. Generate a {% data variables.product.pat_generic %} and add the token as a secret. For more information, see "[AUTOTITLE](/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)" and "[AUTOTITLE](/actions/security-guides/using-secrets-in-github-actions)."
 
 Replace `PERSONAL_ACCESS_TOKEN` in the example with the name of your secret.
 
@@ -569,7 +597,7 @@ Alternatively, use a {% data variables.product.prodname_github_app %} instead of
 
 ## `jobs.<job_id>.steps[*].run`
 
-Runs command-line programs using the operating system's shell. If you do not provide a `name`, the step name will default to the text specified in the `run` command.
+Runs command-line programs that do not exceed 21,000 characters using the operating system's shell. If you do not provide a `name`, the step name will default to the text specified in the `run` command.
 
 Commands run using non-login shells by default. You can choose a different shell and customize the shell used to run commands. For more information, see [`jobs.<job_id>.steps[*].shell`](#jobsjob_idstepsshell).
 
@@ -591,6 +619,8 @@ Each `run` keyword represents a new process and shell in the runner environment.
       npm run build
   ```
 
+## `jobs.<job_id>.steps[*].working-directory`
+
 Using the `working-directory` keyword, you can specify the working directory of where to run the command.
 
 ```yaml
@@ -599,87 +629,82 @@ Using the `working-directory` keyword, you can specify the working directory of 
   working-directory: ./temp
 ```
 
+Alternatively, you can specify a default working directory for all `run` steps in a job, or for all `run` steps in the entire workflow. For more information, see "[`defaults.run.working-directory`](/actions/using-workflows/workflow-syntax-for-github-actions#defaultsrunworking-directory)" and "[`jobs.<job_id>.defaults.run.working-directory`](/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_iddefaultsrunworking-directory)."
+
+You can also use a `run` step to run a script. For more information, see "[AUTOTITLE](/actions/learn-github-actions/essential-features-of-github-actions#adding-scripts-to-your-workflow)."
+
 ## `jobs.<job_id>.steps[*].shell`
 
-You can override the default shell settings in the runner's operating system using the `shell` keyword. You can use built-in `shell` keywords, or you can define a custom set of shell options. The shell command that is run internally executes a temporary file that contains the commands specified in the `run` keyword.
+You can override the default shell settings in the runner's operating system and the job's default using the `shell` keyword. You can use built-in `shell` keywords, or you can define a custom set of shell options. The shell command that is run internally executes a temporary file that contains the commands specified in the `run` keyword.
 
-| Supported platform | `shell` parameter | Description | Command run internally |
-|--------------------|-------------------|-------------|------------------------|
-| Linux / macOS | unspecified | The default shell on non-Windows platforms. Note that this runs a different command to when `bash` is specified explicitly. If `bash` is not found in the path, this is treated as `sh`. | `bash -e {0}` |
-| All | `bash` | The default shell on non-Windows platforms with a fallback to `sh`. When specifying a bash shell on Windows, the bash shell included with Git for Windows is used. | `bash --noprofile --norc -eo pipefail {0}` |
-| All | `pwsh` | The PowerShell Core. {% data variables.product.prodname_dotcom %} appends the extension `.ps1` to your script name. | `pwsh -command ". '{0}'"` |
-| All | `python` | Executes the python command. | `python {0}` |
-| Linux / macOS | `sh` | The fallback behavior for non-Windows platforms if no shell is provided and `bash` is not found in the path. | `sh -e {0}` |
-| Windows | `cmd` | {% data variables.product.prodname_dotcom %} appends the extension `.cmd` to your script name and substitutes for `{0}`. | `%ComSpec% /D /E:ON /V:OFF /S /C "CALL "{0}""`. |
-| Windows | `pwsh` | This is the default shell used on Windows. The PowerShell Core. {% data variables.product.prodname_dotcom %} appends the extension `.ps1` to your script name. If your self-hosted Windows runner does not have _PowerShell Core_ installed, then _PowerShell Desktop_ is used instead.| `pwsh -command ". '{0}'"`. |
-| Windows | `powershell` | The PowerShell Desktop. {% data variables.product.prodname_dotcom %} appends the extension `.ps1` to your script name. | `powershell -command ". '{0}'"`. |
+{% data reusables.actions.supported-shells %}
 
-### Example: Running a script using bash
+Alternatively, you can specify a default shell for all `run` steps in a job, or for all `run` steps in the entire workflow. For more information, see "[`defaults.run.shell`](/actions/using-workflows/workflow-syntax-for-github-actions#defaultsrunshell)" and "[`jobs.<job_id>.defaults.run.shell`](/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_iddefaultsrunshell)."
+
+### Example: Running a command using Bash
 
 ```yaml
 steps:
   - name: Display the path
-    run: echo $PATH
     shell: bash
+    run: echo $PATH
 ```
 
-### Example: Running a script using Windows `cmd`
+### Example: Running a command using Windows `cmd`
 
 ```yaml
 steps:
   - name: Display the path
-    run: echo %PATH%
     shell: cmd
+    run: echo %PATH%
 ```
 
-### Example: Running a script using PowerShell Core
+### Example: Running a command using PowerShell Core
 
 ```yaml
 steps:
   - name: Display the path
-    run: echo ${env:PATH}
     shell: pwsh
-```
-
-### Example: Using PowerShell Desktop to run a script
-
-```yaml
-steps:
-  - name: Display the path
     run: echo ${env:PATH}
-    shell: powershell
 ```
 
-### Example: Running a python script
+### Example: Using PowerShell Desktop to run a command
 
 ```yaml
 steps:
   - name: Display the path
+    shell: powershell
+    run: echo ${env:PATH}
+```
+
+### Example: Running an inline Python script
+
+```yaml
+steps:
+  - name: Display the path
+    shell: python
     run: |
       import os
       print(os.environ['PATH'])
-    shell: python
 ```
 
 ### Custom shell
 
-You can set the `shell` value to a template string using `command […options] {0} [..more_options]`. {% data variables.product.prodname_dotcom %} interprets the first whitespace-delimited word of the string as the command, and inserts the file name for the temporary script at `{0}`.
+You can set the `shell` value to a template string using `command [options] {0} [more_options]`. {% data variables.product.prodname_dotcom %} interprets the first whitespace-delimited word of the string as the command, and inserts the file name for the temporary script at `{0}`.
 
 For example:
 
 ```yaml
 steps:
   - name: Display the environment variables and their values
+    shell: perl {0}
     run: |
       print %ENV
-    shell: perl {0}
 ```
 
 The command used, `perl` in this example, must be installed on the runner.
 
-{% ifversion ghae %}
-{% data reusables.actions.self-hosted-runners-software %}
-{% elsif fpt or ghec %}
+{% ifversion fpt or ghec %}
 For information about the software included on GitHub-hosted runners, see "[AUTOTITLE](/actions/using-github-hosted-runners/about-github-hosted-runners#supported-software)."
 {% endif %}
 
@@ -688,9 +713,9 @@ For information about the software included on GitHub-hosted runners, see "[AUTO
 For built-in shell keywords, we provide the following defaults that are executed by {% data variables.product.prodname_dotcom %}-hosted runners. You should use these guidelines when running shell scripts.
 
 - `bash`/`sh`:
-  - Fail-fast behavior using `set -eo pipefail`: This option is set when `shell: bash` is explicitly specified. It is not applied by default.
+  - By default, fail-fast behavior is enforced using `set -e` for both `sh` and `bash`. When `shell: bash` is specified, `-o pipefail` is also applied to enforce early exit from pipelines that generate a non-zero exit status.
   - You can take full control over shell parameters by providing a template string to the shell options. For example, `bash {0}`.
-  - sh-like shells exit with the exit code of the last command executed in a script, which is also the default behavior for actions. The runner will report the status of the step as fail/succeed based on this exit code.
+  - `sh`-like shells exit with the exit code of the last command executed in a script, which is also the default behavior for actions. The runner will report the status of the step as fail/succeed based on this exit code.
 
 - `powershell`/`pwsh`
   - Fail-fast behavior when possible. For `pwsh` and `powershell` built-in shell, we will prepend `$ErrorActionPreference = 'stop'` to script contents.
@@ -799,7 +824,7 @@ The maximum number of minutes to run the step before killing the process.
 
 The maximum number of minutes to let a job run before {% data variables.product.prodname_dotcom %} automatically cancels it. Default: 360
 
-If the timeout exceeds the job execution time limit for the runner, the job will be canceled when the execution time limit is met instead. For more information about job execution time limits, see {% ifversion fpt or ghec or ghes %}"[AUTOTITLE](/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits)" for {% data variables.product.prodname_dotcom %}-hosted runners and {% endif %}"[AUTOTITLE](/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#usage-limits){% ifversion fpt or ghec or ghes %}" for self-hosted runner usage limits.{% elsif ghae %}."{% endif %}
+If the timeout exceeds the job execution time limit for the runner, the job will be canceled when the execution time limit is met instead. For more information about job execution time limits, see "[AUTOTITLE](/actions/learn-github-actions/usage-limits-billing-and-administration#usage-limits)" for {% data variables.product.prodname_dotcom %}-hosted runners and "[AUTOTITLE](/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners#usage-limits)" for self-hosted runner usage limits.
 
 {% note %}
 
@@ -940,7 +965,15 @@ services:
 
 ## `jobs.<job_id>.services.<service_id>.image`
 
-The Docker image to use as the service container to run the action. The value can be the Docker Hub image name or a  registry name.
+The Docker image to use as the service container to run the action. The value can be the Docker Hub image name or a registry name.
+
+If `jobs.<job_id>.services.<service_id>.image` is assigned an empty string, the service will not start. You can use this to set up conditional services, similar to the following example.
+
+```yaml
+services:
+  nginx:
+    image: {% raw %}${{ options.nginx == true && 'nginx' || '' }}{% endraw %}
+```
 
 ## `jobs.<job_id>.services.<service_id>.credentials`
 
@@ -1005,9 +1038,7 @@ Additional Docker container resource options. For a list of options, see "[`dock
 
 ## `jobs.<job_id>.uses`
 
-{% data reusables.actions.reusable-workflows-enterprise-beta %}
-
-The location and version of a reusable workflow file to run as a job. {% ifversion fpt or ghec or ghes > 3.4 or ghae > 3.4 %}Use one of the following syntaxes:{% endif %}
+The location and version of a reusable workflow file to run as a job. Use one of the following syntaxes:
 
 {% data reusables.actions.reusable-workflow-calling-syntax %}
 
@@ -1023,7 +1054,7 @@ When a job is used to call a reusable workflow, you can use `with` to provide a 
 
 Any inputs that you pass must match the input specifications defined in the called workflow.
 
-Unlike [`jobs.<job_id>.steps[*].with`](#jobsjob_idstepswith), the inputs you pass with `jobs.<job_id>.with` are not be available as environment variables in the called workflow. Instead, you can reference the inputs by using the `inputs` context.
+Unlike [`jobs.<job_id>.steps[*].with`](#jobsjob_idstepswith), the inputs you pass with `jobs.<job_id>.with` are not available as environment variables in the called workflow. Instead, you can reference the inputs by using the `inputs` context.
 
 ### Example of `jobs.<job_id>.with`
 
@@ -1110,7 +1141,7 @@ You can use special characters in path, branch, and tag filters.
 - `**`: Matches zero or more of any character.
 - `?`: Matches zero or one of the preceding character.
 - `+`: Matches one or more of the preceding character.
-- `[]` Matches one character listed in the brackets or included in ranges. Ranges can only include `a-z`, `A-Z`, and `0-9`. For example, the range`[0-9a-z]` matches any digit or lowercase letter. For example, `[CB]at` matches `Cat` or `Bat` and `[1-2]00` matches `100` and `200`.
+- `[]` Matches one alphanumeric character listed in the brackets or included in ranges. Ranges can only include `a-z`, `A-Z`, and `0-9`. For example, the range`[0-9a-z]` matches any digit or lowercase letter. For example, `[CB]at` matches `Cat` or `Bat` and `[1-2]00` matches `100` and `200`.
 - `!`: At the start of a pattern makes it negate previous positive patterns. It has no special meaning if not the first character.
 
 The characters `*`, `[`, and `!` are special characters in YAML. If you start a pattern with `*`, `[`, or `!`, you must enclose the pattern in quotes. Also, if you use a [flow sequence](https://yaml.org/spec/1.2.2/#flow-sequences) with a pattern containing `[` and/or `]`, the pattern must be enclosed in quotes.
@@ -1136,35 +1167,35 @@ For more information about branch, tag, and path filter syntax, see "[`on.<push>
 
 ### Patterns to match branches and tags
 
-| Pattern | Description | Example matches |
-|---------|------------------------|---------|
-| `feature/*` | The `*` wildcard matches any character, but does not match slash (`/`). |  `feature/my-branch`<br/><br/>`feature/your-branch` |
-| `feature/**` | The `**` wildcard matches any character including slash (`/`) in branch and tag names. | `feature/beta-a/my-branch`<br/><br/>`feature/your-branch`<br/><br/>`feature/mona/the/octocat` |
-| `main`<br/><br/>`releases/mona-the-octocat` | Matches the exact name of a branch or tag name. | `main`<br/><br/>`releases/mona-the-octocat` |
-| `'*'` | Matches all branch and tag names that don't contain a slash (`/`). The `*` character is a special character in YAML. When you start a pattern with `*`, you must use quotes. | `main`<br/><br/>`releases` |
-| `'**'` | Matches all branch and tag names. This is the default behavior when you don't use a `branches` or `tags` filter. | `all/the/branches`<br/><br/>`every/tag` |
-| `'*feature'` | The `*` character is a special character in YAML. When you start a pattern with `*`, you must use quotes. | `mona-feature`<br/><br/>`feature`<br/><br/>`ver-10-feature` |
-| `v2*` | Matches branch and tag names that start with `v2`. | `v2`<br/><br/>`v2.0`<br/><br/>`v2.9` |
-| `v[12].[0-9]+.[0-9]+` | Matches all semantic versioning branches and tags with major version 1 or 2. | `v1.10.1`<br/><br/>`v2.0.0` |
+| Pattern                                     | Description                                                                                                                                                                  | Example matches                                                                               |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `feature/*`                                 | The `*` wildcard matches any character, but does not match slash (`/`).                                                                                                      | `feature/my-branch`<br/><br/>`feature/your-branch`                                            |
+| `feature/**`                                | The `**` wildcard matches any character including slash (`/`) in branch and tag names.                                                                                       | `feature/beta-a/my-branch`<br/><br/>`feature/your-branch`<br/><br/>`feature/mona/the/octocat` |
+| `main`<br/><br/>`releases/mona-the-octocat` | Matches the exact name of a branch or tag name.                                                                                                                              | `main`<br/><br/>`releases/mona-the-octocat`                                                   |
+| `'*'`                                       | Matches all branch and tag names that don't contain a slash (`/`). The `*` character is a special character in YAML. When you start a pattern with `*`, you must use quotes. | `main`<br/><br/>`releases`                                                                    |
+| `'**'`                                      | Matches all branch and tag names. This is the default behavior when you don't use a `branches` or `tags` filter.                                                             | `all/the/branches`<br/><br/>`every/tag`                                                       |
+| `'*feature'`                                | The `*` character is a special character in YAML. When you start a pattern with `*`, you must use quotes.                                                                    | `mona-feature`<br/><br/>`feature`<br/><br/>`ver-10-feature`                                   |
+| `v2*`                                       | Matches branch and tag names that start with `v2`.                                                                                                                           | `v2`<br/><br/>`v2.0`<br/><br/>`v2.9`                                                          |
+| `v[12].[0-9]+.[0-9]+`                       | Matches all semantic versioning branches and tags with major version 1 or 2.                                                                                                 | `v1.10.1`<br/><br/>`v2.0.0`                                                                   |
 
 ### Patterns to match file paths
 
 Path patterns must match the whole path, and start from the repository's root.
 
-| Pattern | Description of matches | Example matches |
-|---------|------------------------|-----------------|
-| `'*'` | The `*` wildcard matches any character, but does not match slash (`/`). The `*` character is a special character in YAML. When you start a pattern with `*`, you must use quotes. | `README.md`<br/><br/>`server.rb` |
-| `'*.jsx?'` | The `?` character matches zero or one of the preceding character. | `page.js`<br/><br/>`page.jsx` |
-| `'**'` | The `**` wildcard matches any character including slash (`/`). This is the default behavior when you don't use a `path` filter. | `all/the/files.md` |
-| `'*.js'` | The `*` wildcard matches any character, but does not match slash (`/`). Matches all `.js` files at the root of the repository. | `app.js`<br/><br/>`index.js`
-| `'**.js'` | Matches all `.js` files in the repository. | `index.js`<br/><br/>`js/index.js`<br/><br/>`src/js/app.js` |
-| `docs/*`  | All files within the root of the `docs` directory, at the root of the repository. | `docs/README.md`<br/><br/>`docs/file.txt` |
-| `docs/**` | Any files in the `/docs` directory at the root of the repository. | `docs/README.md`<br/><br/>`docs/mona/octocat.txt` |
-| `docs/**/*.md` | A file with a `.md` suffix anywhere in the `docs` directory. | `docs/README.md`<br/><br/>`docs/mona/hello-world.md`<br/><br/>`docs/a/markdown/file.md`
-| `'**/docs/**'`   | Any files in a `docs` directory anywhere in the repository. | `docs/hello.md`<br/><br/>`dir/docs/my-file.txt`<br/><br/>`space/docs/plan/space.doc`
-| `'**/README.md'` | A README.md file anywhere in the repository. | `README.md`<br/><br/>`js/README.md`
-| `'**/*src/**'` | Any file in a folder with a `src` suffix anywhere in the repository. | `a/src/app.js`<br/><br/>`my-src/code/js/app.js`
-| `'**/*-post.md'` | A file with the suffix `-post.md` anywhere in the repository. | `my-post.md`<br/><br/>`path/their-post.md` |
-| `'**/migrate-*.sql'` | A file with the prefix `migrate-` and suffix `.sql` anywhere in the repository. | `migrate-10909.sql`<br/><br/>`db/migrate-v1.0.sql`<br/><br/>`db/sept/migrate-v1.sql` |
-| `*.md`<br/><br/>`!README.md` | Using an exclamation mark (`!`) in front of a pattern negates it. When a file matches a pattern and also matches a negative pattern defined later in the file, the file will not be included. | `hello.md`<br/><br/>_Does not match_<br/><br/>`README.md`<br/><br/>`docs/hello.md` |
-| `*.md`<br/><br/>`!README.md`<br/><br/>`README*` | Patterns are checked sequentially. A pattern that negates a previous pattern will re-include file paths. | `hello.md`<br/><br/>`README.md`<br/><br/>`README.doc`|
+| Pattern                                             | Description of matches                                                                                                                                                                        | Example matches                                                                         |
+| --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `'*'`                                               | The `*` wildcard matches any character, but does not match slash (`/`). The `*` character is a special character in YAML. When you start a pattern with `*`, you must use quotes.             | `README.md`<br/><br/>`server.rb`                                                        |
+| `'*.jsx?'`                                          | The `?` character matches zero or one of the preceding character.                                                                                                                             | `page.js`<br/><br/>`page.jsx`                                                           |
+| `'**'`                                              | The `**` wildcard matches any character including slash (`/`). This is the default behavior when you don't use a `path` filter.                                                               | `all/the/files.md`                                                                      |
+| `'*.js'`                                            | The `*` wildcard matches any character, but does not match slash (`/`). Matches all `.js` files at the root of the repository.                                                                | `app.js`<br/><br/>`index.js`                                                            |
+| `'**.js'`                                           | Matches all `.js` files in the repository.                                                                                                                                                    | `index.js`<br/><br/>`js/index.js`<br/><br/>`src/js/app.js`                              |
+| `docs/*`                                            | All files within the root of the `docs` directory, at the root of the repository.                                                                                                             | `docs/README.md`<br/><br/>`docs/file.txt`                                               |
+| `docs/**`                                           | Any files in the `/docs` directory at the root of the repository.                                                                                                                             | `docs/README.md`<br/><br/>`docs/mona/octocat.txt`                                       |
+| `docs/**/*.md`                                      | A file with a `.md` suffix anywhere in the `docs` directory.                                                                                                                                  | `docs/README.md`<br/><br/>`docs/mona/hello-world.md`<br/><br/>`docs/a/markdown/file.md` |
+| `'**/docs/**'`                                      | Any files in a `docs` directory anywhere in the repository.                                                                                                                                   | `docs/hello.md`<br/><br/>`dir/docs/my-file.txt`<br/><br/>`space/docs/plan/space.doc`    |
+| `'**/README.md'`                                    | A README.md file anywhere in the repository.                                                                                                                                                  | `README.md`<br/><br/>`js/README.md`                                                     |
+| `'**/*src/**'`                                      | Any file in a folder with a `src` suffix anywhere in the repository.                                                                                                                          | `a/src/app.js`<br/><br/>`my-src/code/js/app.js`                                         |
+| `'**/*-post.md'`                                    | A file with the suffix `-post.md` anywhere in the repository.                                                                                                                                 | `my-post.md`<br/><br/>`path/their-post.md`                                              |
+| `'**/migrate-*.sql'`                                | A file with the prefix `migrate-` and suffix `.sql` anywhere in the repository.                                                                                                               | `migrate-10909.sql`<br/><br/>`db/migrate-v1.0.sql`<br/><br/>`db/sept/migrate-v1.sql`    |
+| `'*.md'`<br/><br/>`'!README.md'`                    | Using an exclamation mark (`!`) in front of a pattern negates it. When a file matches a pattern and also matches a negative pattern defined later in the file, the file will not be included. | `hello.md`<br/><br/>_Does not match_<br/><br/>`README.md`<br/><br/>`docs/hello.md`      |
+| `'*.md'`<br/><br/>`'!README.md'`<br/><br/>`README*` | Patterns are checked sequentially. A pattern that negates a previous pattern will re-include file paths.                                                                                      | `hello.md`<br/><br/>`README.md`<br/><br/>`README.doc`                                   |

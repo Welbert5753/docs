@@ -1,22 +1,22 @@
-import { fileURLToPath } from 'url'
 import path from 'path'
 import fs from 'fs'
+
 import walk from 'walk-sync'
 import { zip, difference } from 'lodash-es'
 import GithubSlugger from 'github-slugger'
 import { decode } from 'html-entities'
+import { beforeAll, describe, expect, test } from 'vitest'
 
-import matter from '../../../lib/read-frontmatter.js'
+import matter from '#src/frame/lib/read-frontmatter.js'
 import { renderContent } from '#src/content-render/index.js'
-import getApplicableVersions from '../../../lib/get-applicable-versions.js'
-import contextualize from '../../../middleware/context.js'
-import shortVersions from '../../../middleware/contextualizers/short-versions.js'
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+import getApplicableVersions from '#src/versions/lib/get-applicable-versions.js'
+import contextualize from '#src/frame/middleware/context/context.js'
+import shortVersions from '#src/versions/middleware/short-versions.js'
+import { ROOT } from '#src/frame/lib/constants.js'
 
 const slugger = new GithubSlugger()
 
-const contentDir = path.join(__dirname, '../../../content')
+const contentDir = path.join(ROOT, 'content')
 
 describe('category pages', () => {
   const walkOptions = {
@@ -35,10 +35,13 @@ describe('category pages', () => {
   const productIndices = walk(contentDir, walkOptions)
   const productNames = productIndices.map((index) => path.basename(path.dirname(index)))
 
-  // Combine those to fit Jest's `.each` usage
+  // Combine those to fit vitest's `.each` usage
   const productTuples = zip(productNames, productIndices)
 
-  describe.each(productTuples)('product "%s"', (productName, productIndex) => {
+  // Use a regular forEach loop to generate the `describe(...)` blocks
+  // otherwise, if one of them has no categories, the tests will fail.
+  productTuples.forEach((tuple) => {
+    const [, productIndex] = tuple
     // Get links included in product index page.
     // Each link corresponds to a product subdirectory (category).
     // Example: "getting-started-with-github"
@@ -50,7 +53,7 @@ describe('category pages', () => {
     const categoryLinks = data.children
       // Only include category directories, not standalone category files like content/actions/quickstart.md
       .filter((link) => fs.existsSync(getPath(productDir, link, 'index')))
-    // TODO this should move to async, but you can't asynchronously define tests with Jest...
+    // TODO this should move to async, but you can't asynchronously define tests with vitest...
 
     // Map those to the Markdown file paths that represent that category page index
     const categoryPaths = categoryLinks.map((link) => getPath(productDir, link, 'index'))
@@ -58,10 +61,8 @@ describe('category pages', () => {
     // Make them relative for nicer display in test names
     const categoryRelativePaths = categoryPaths.map((p) => path.relative(contentDir, p))
 
-    // Combine those to fit Jest's `.each` usage
+    // Combine those to fit vitests's `.each` usage
     const categoryTuples = zip(categoryRelativePaths, categoryPaths, categoryLinks)
-
-    if (!categoryTuples.length) return
 
     describe.each(categoryTuples)(
       'category index "%s"',
@@ -69,8 +70,10 @@ describe('category pages', () => {
         let publishedArticlePaths,
           availableArticlePaths,
           indexTitle,
+          indexShortTitle,
           categoryVersions,
-          categoryChildTypes
+          categoryChildTypes,
+          allowTitleToDifferFromFilename
         const articleVersions = {}
 
         beforeAll(async () => {
@@ -80,6 +83,7 @@ describe('category pages', () => {
           const indexContents = await fs.promises.readFile(indexAbsPath, 'utf8')
           const { data } = matter(indexContents)
           categoryVersions = getApplicableVersions(data.versions, indexAbsPath)
+          allowTitleToDifferFromFilename = data.allowTitleToDifferFromFilename
           categoryChildTypes = []
           const articleLinks = data.children.filter((child) => {
             const mdPath = getPath(productDir, indexLink, child)
@@ -114,6 +118,14 @@ describe('category pages', () => {
             ? await renderContent(data.title, req.context, { textOnly: true })
             : data.title
 
+          if (data.shortTitle) {
+            indexShortTitle = data.shortTitle.includes('{')
+              ? await renderContent(data.shortTitle, req.context, { textOnly: true })
+              : data.shortTitle
+          } else {
+            indexShortTitle = ''
+          }
+
           publishedArticlePaths = (
             await Promise.all(
               articleLinks.map(async (articleLink) => {
@@ -126,14 +138,14 @@ describe('category pages', () => {
 
                 // ".../content/github/{category}/{article}.md" => "/{article}"
                 return `/${path.relative(categoryDir, articlePath).replace(/\.md$/, '')}`
-              })
+              }),
             )
           ).filter(Boolean)
 
           // Get all of the child articles that exist in the subdir
           const childEntries = await fs.promises.readdir(categoryDir, { withFileTypes: true })
           const childFileEntries = childEntries.filter(
-            (ent) => ent.isFile() && ent.name !== 'index.md'
+            (ent) => ent.isFile() && ent.name !== 'index.md',
           )
           const childFilePaths = childFileEntries.map((ent) => path.join(categoryDir, ent.name))
 
@@ -148,7 +160,7 @@ describe('category pages', () => {
 
                 // ".../content/github/{category}/{article}.md" => "/{article}"
                 return `/${path.relative(categoryDir, articlePath).replace(/\.md$/, '')}`
-              })
+              }),
             )
           ).filter(Boolean)
 
@@ -158,7 +170,7 @@ describe('category pages', () => {
               const { data } = matter(articleContents)
 
               articleVersions[articlePath] = getApplicableVersions(data.versions, articlePath)
-            })
+            }),
           )
         })
 
@@ -191,26 +203,34 @@ describe('category pages', () => {
             }),
             `${indexRelPath.replace('index.md', '')} contains a mix of ${errorType}s and ${
               categoryChildTypes[0]
-            }s, category children must be of the same type`
+            }s, category children must be of the same type`,
           ).toBe(true)
         })
 
-        // TODO: Unskip this test once the related script has been executed
-        // Docs Engineering issue: 963
-        test.skip('slugified title matches parent directory name', () => {
+        test('slugified title matches parent directory name', () => {
+          if (allowTitleToDifferFromFilename) return
+
           // Get the parent directory name
           const categoryDirPath = path.dirname(indexAbsPath)
           const categoryDirName = path.basename(categoryDirPath)
 
           slugger.reset()
-          const expectedSlug = slugger.slug(decode(indexTitle))
+          const expectedSlugs = [slugger.slug(decode(indexTitle))]
+          if (indexShortTitle && indexShortTitle !== indexTitle) {
+            expectedSlugs.push(slugger.slug(decode(indexShortTitle)))
+          }
 
+          let customMessage = `Directory name "${categoryDirName}" is not one of ${expectedSlugs
+            .map((x) => `"${x}"`)
+            .join(', ')} which comes from the title "${indexTitle}"${
+            indexShortTitle ? ` or shortTitle "${indexShortTitle}"` : ' (no shortTitle)'
+          }`
+          const newCategoryDirPath = path.join(path.dirname(categoryDirPath), expectedSlugs.at(-1))
+          customMessage += `\nTo resolve this consider running:\n  ./src/content-render/scripts/move-content.js ${categoryDirPath} ${newCategoryDirPath}\n`
           // Check if the directory name matches the expected slug
-          expect(categoryDirName).toBe(expectedSlug)
-
-          // If this fails, execute "script/reconcile-category-dirs-with-ids.js"
+          expect(expectedSlugs.includes(categoryDirName), customMessage).toBeTruthy()
         })
-      }
+      },
     )
   })
 })

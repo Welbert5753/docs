@@ -23,19 +23,28 @@ Code navigation uses the open source [`tree-sitter`](https://github.com/tree-sit
 
 {% rowheaders %}
 
-| Language   | Search-based code navigation | Precise code navigation |
-|:----------:|:----------------------------:|:-----------------------:|
-| C#         | {% octicon "check" aria-label="Supported" %}                           | {% octicon "x" aria-label="Not supported" %}                         |
-| CodeQL     | {% octicon "check" aria-label="Supported" %}                           | {% octicon "x" aria-label="Not supported" %}                         |
-| Elixir     | {% octicon "check" aria-label="Supported" %}                           | {% octicon "x" aria-label="Not supported" %}                         |
-| Go         | {% octicon "check" aria-label="Supported" %}                           | {% octicon "x" aria-label="Not supported" %}                         |
-| Java       | {% octicon "check" aria-label="Supported" %}                           | {% octicon "x" aria-label="Not supported" %}                         |
-| JavaScript | {% octicon "check" aria-label="Supported" %}                           | {% octicon "x" aria-label="Not supported" %}                         |
-| PHP        | {% octicon "check" aria-label="Supported" %}                           | {% octicon "x" aria-label="Not supported" %}                         |
-| Python     | {% octicon "check" aria-label="Supported" %}                           | {% octicon "check" aria-label="Supported" %}                      |
-| Ruby       | {% octicon "check" aria-label="Supported" %}                           | {% octicon "x" aria-label="Not supported" %}                         |
-| Rust       | {% octicon "check" aria-label="Supported" %}                           | {% octicon "x" aria-label="Not supported" %}                         |
-| TypeScript | {% octicon "check" aria-label="Supported" %}                           | {% octicon "x" aria-label="Not supported" %}                         |
+| Language         | Search-based code navigation                 | Precise code navigation                      |
+|------------------|:--------------------------------------------:|:--------------------------------------------:|
+| Bash             | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| C                | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| C#               | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| C++              | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| CodeQL           | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| Elixir           | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| Go               | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| JSX              | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| Java             | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| JavaScript       | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| Lua              | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| PHP              | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| Protocol Buffers | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| Python           | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} |
+| Ruby             | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| Rust             | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| Scala            | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| Starlark         | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| Swift            | {% octicon "check" aria-label="Supported" %} | {% octicon "x" aria-label="Not supported" %} |
+| TypeScript       | {% octicon "check" aria-label="Supported" %} | {% octicon "check" aria-label="Supported" %} |
 
 {% endrowheaders %}
 
@@ -49,9 +58,9 @@ To learn more about these approaches, see "[Precise and search-based navigation]
 
 Future releases will add _precise code navigation_ for more languages, which is a code navigation approach that can give more accurate results.
 
-{% ifversion code-search-code-view %}You can use keyboard shortcuts to navigate within a code file. For more information, see "[AUTOTITLE](/get-started/using-github/keyboard-shortcuts#navigating-within-code-files)."{% endif %}
+{% ifversion code-view-ui %}You can use keyboard shortcuts to navigate within a code file. For more information, see "[AUTOTITLE](/get-started/accessibility/keyboard-shortcuts#navigating-within-code-files)."{% endif %}
 
-{% ifversion code-search-code-view %}
+{% ifversion code-search-upgrade %}
 
 ## Using the symbols pane
 
@@ -62,7 +71,7 @@ Symbol search is a feature of code search. For more information, see "[AUTOTITLE
 1. Select a repository, then navigate to a file containing symbols.
 1. To bring up the symbols pane, above the file content, click {% octicon "code-square" aria-label="The code square icon" %}.
 
-  Alternatively, you can open the symbols pane by clicking an eligible symbol in your file. Clickable symbols are highlighted in yellow when you hover over them.
+   Alternatively, you can open the symbols pane by clicking an eligible symbol in your file. Clickable symbols are highlighted in yellow when you hover over them.
 
 1. Click the symbol you would like to find from the symbols pane or within the file itself.
 
@@ -109,4 +118,4 @@ If code navigation is enabled for you but you don't see links to the definitions
 
 ## Further reading
 
-- "[AUTOTITLE]{% ifversion code-search-code-view %}(/search-github/github-code-search/about-github-code-search){% else %}(/search-github/searching-on-github/searching-code){% endif %}"
+- "[AUTOTITLE]{% ifversion code-search-upgrade %}(/search-github/github-code-search/about-github-code-search){% else %}(/search-github/searching-on-github/searching-code){% endif %}"

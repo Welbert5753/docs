@@ -5,7 +5,6 @@ intro: 'Follow this tutorial to write Ruby code to generate a user access token 
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 topics:
   - GitHub Apps
@@ -44,29 +43,29 @@ To follow this tutorial, you must install the Sinatra and dotenv gems in your Ru
 
 1. If you don't already have Bundler installed, run the following command in your terminal:
 
-   ```
+   ```shell
    gem install bundler
    ```
 
 1. If you don't already have a Gemfile for your app, run the following command in your terminal:
 
-   ```
+   ```shell
    bundle init
    ```
 
 1. If you don't already have a Gemfile.lock for your app, run the following command in your terminal:
 
-   ```
+   ```shell
    bundle install
    ```
 
 1. Install the gems by running the following commands in your terminal:
 
-   ```
+   ```shell
    bundle add sinatra
    ```
 
-   ```
+   ```shell
    bundle add dotenv
    ```
 
@@ -85,7 +84,7 @@ This tutorial will show you how to store the client ID and client secret in envi
 1. Add `.env` to your `.gitignore` file. This will prevent you from accidentally committing your client secret. For more information about `.gitignore` files, see "[AUTOTITLE](/get-started/getting-started-with-git/ignoring-files)."
 1. Add the following contents to your `.env` file. Replace `YOUR_CLIENT_ID` with the client ID of your app. Replace `YOUR_CLIENT_SECRET` with the client secret for your app.
 
-   ```
+   ```text
    CLIENT_ID="YOUR_CLIENT_ID"
    CLIENT_SECRET="YOUR_CLIENT_SECRET"
    ```
@@ -250,7 +249,7 @@ These steps lead you through writing code to generate a user access token. To sk
 
    ```ruby copy
    def user_info(token)
-     uri = URI("{% data variables.product.api_url_code %}/user")
+     uri = URI("{% data variables.product.rest_url %}/user")
 
      result = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
        body = {"access_token" => token}.to_json
@@ -333,7 +332,7 @@ def exchange_code(code)
 end
 
 def user_info(token)
-  uri = URI("{% data variables.product.api_url_code %}/user")
+  uri = URI("{% data variables.product.rest_url %}/user")
 
   result = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
     body = {"access_token" => token}.to_json

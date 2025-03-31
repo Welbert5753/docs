@@ -9,7 +9,6 @@ redirect_from:
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 ---
 To compare different versions of your repository, append `/compare` to your repository's path.
@@ -36,6 +35,12 @@ For more information, see "[AUTOTITLE](/repositories/releasing-projects-on-githu
 To compare tags, you can select a tag name from the `compare` drop-down menu at the top of the page.
 
 Here's an example of a [comparison between two tags](https://github.com/octocat/linguist/compare/v2.2.0...octocat:v2.3.3).
+
+{% note %}
+
+**Note:** If a branch and a tag have the same name, the branch will be used when comparing commits. You can compare the tag specifically by adding `tags/` to the tag name.
+
+{% endnote %}
 
 ## Comparing commits
 

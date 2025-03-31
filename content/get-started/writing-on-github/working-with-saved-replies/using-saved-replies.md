@@ -8,7 +8,6 @@ redirect_from:
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 ---
 {% data reusables.repositories.navigate-to-repo %}
@@ -22,7 +21,7 @@ versions:
 {% tip %}
 
 **Tips:**
-- You can use a keyboard shortcut to autofill the comment with a saved reply. For more information, see "[AUTOTITLE](/get-started/using-github/keyboard-shortcuts#comments)."
+- You can use a keyboard shortcut to autofill the comment with a saved reply. For more information, see "[AUTOTITLE](/get-started/accessibility/keyboard-shortcuts#comments)."
 - You can filter the list by typing the title of the saved reply.
 
 {% endtip %}

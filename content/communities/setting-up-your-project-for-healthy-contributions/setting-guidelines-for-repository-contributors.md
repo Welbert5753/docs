@@ -4,7 +4,6 @@ intro: You can create guidelines to communicate how people should contribute to 
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 redirect_from:
   - /articles/how-do-i-set-up-guidelines-for-contributors
@@ -24,11 +23,7 @@ For contributors, the guidelines help them verify that they're submitting well-f
 
 For both owners and contributors, contribution guidelines save time and hassle caused by improperly created pull requests or issues that have to be rejected and re-submitted.
 
-{% ifversion fpt or ghes or ghec %}
-
-You can create default contribution guidelines for your organization{% ifversion fpt or ghes or ghec %} or personal account{% endif %}. For more information, see "[AUTOTITLE](/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file)."
-
-{% endif %}
+You can create default contribution guidelines for your organization or personal account. For more information, see "[AUTOTITLE](/communities/setting-up-your-project-for-healthy-contributions/creating-a-default-community-health-file)."
 
 {% tip %}
 
@@ -56,12 +51,12 @@ You can create default contribution guidelines for your organization{% ifversion
 
 If you're stumped, here are some good examples of contribution guidelines:
 
-- The {% data variables.product.prodname_docs %} [contribution guidelines](https://github.com/github/docs/blob/main/CONTRIBUTING.md).
+- The {% data variables.product.prodname_docs %} [contribution guidelines](/contributing).
 - The Ruby on Rails [contribution guidelines](https://github.com/rails/rails/blob/main/CONTRIBUTING.md).
 - The Open Government [contribution guidelines](https://github.com/opengovernment/opengovernment/blob/master/CONTRIBUTING.md).
 
 ## Further reading
 
 - The Open Source Guides' section "[Starting an Open Source Project](https://opensource.guide/starting-a-project/)"{% ifversion fpt or ghec %}
-- [{% data variables.product.prodname_learning %}]({% data variables.product.prodname_learning_link %}){% endif %}{% ifversion fpt or ghes or ghec %}
-- "[AUTOTITLE](/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository)"{% endif %}
+- [{% data variables.product.prodname_learning %}]({% data variables.product.prodname_learning_link %}){% endif %}
+- "[AUTOTITLE](/communities/setting-up-your-project-for-healthy-contributions/adding-a-license-to-a-repository)"

@@ -5,7 +5,6 @@ intro: 'How to automatically trigger {% data variables.product.prodname_actions 
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 type: tutorial
 topics:
@@ -25,7 +24,7 @@ Workflow triggers are defined with the `on` key. For more information, see "[AUT
 The following steps occur to trigger a workflow run:
 
 1. An event occurs on your repository. The event has an associated commit SHA and Git ref.
-1. {% data variables.product.product_name %} searches the `.github/workflows` directory in your repository for workflow files that are present in the associated commit SHA or Git ref of the event.
+1. {% data variables.product.product_name %} searches the `.github/workflows` directory in the root of your repository for workflow files that are present in the associated commit SHA or Git ref of the event.
 1. A workflow run is triggered for any workflows that have `on:` values that match the triggering event. Some events also require the workflow file to be present on the default branch of the repository in order to run.
 
    Each workflow run will use the version of the workflow that is present in the associated commit SHA or Git ref of the event. When a workflow runs, {% data variables.product.product_name %} sets the `GITHUB_SHA` (commit SHA) and `GITHUB_REF` (Git ref) environment variables in the runner environment. For more information, see "[AUTOTITLE](/actions/learn-github-actions/variables)."
@@ -36,7 +35,7 @@ The following steps occur to trigger a workflow run:
 
 If you do want to trigger a workflow from within a workflow run, you can use a {% data variables.product.prodname_github_app %} installation access token or a {% data variables.product.pat_generic %} instead of `GITHUB_TOKEN` to trigger events that require a token.
 
-If you use a {% data variables.product.prodname_github_app %}, you'll need to create a {% data variables.product.prodname_github_app %} and store the app ID and private key as secrets. For more information, see "[AUTOTITLE](/apps/creating-github-apps/guides/making-authenticated-api-requests-with-a-github-app-in-a-github-actions-workflow)." If you use a {% data variables.product.pat_generic %}, you'll need to create a {% data variables.product.pat_generic %} and store it as a secret. For more information about creating a {% data variables.product.pat_generic %}, see "[AUTOTITLE](/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)." For more information about storing secrets, see "[AUTOTITLE](/actions/security-guides/encrypted-secrets)."
+If you use a {% data variables.product.prodname_github_app %}, you'll need to create a {% data variables.product.prodname_github_app %} and store the app ID and private key as secrets. For more information, see "[AUTOTITLE](/apps/creating-github-apps/guides/making-authenticated-api-requests-with-a-github-app-in-a-github-actions-workflow)." If you use a {% data variables.product.pat_generic %}, you'll need to create a {% data variables.product.pat_generic %} and store it as a secret. For more information about creating a {% data variables.product.pat_generic %}, see "[AUTOTITLE](/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)." For more information about storing secrets, see "[AUTOTITLE](/actions/security-guides/using-secrets-in-github-actions)."
 
 To minimize your {% data variables.product.prodname_actions %} usage costs, ensure that you don't create recursive or unintended workflow runs.
 
@@ -53,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - env:
-          GITHUB_TOKEN: {% raw %}${{ secrets.MY_TOKEN }}{% endraw %}
+          GH_TOKEN: {% raw %}${{ secrets.MY_TOKEN }}{% endraw %}
           ISSUE_URL: {% raw %}${{ github.event.issue.html_url }}{% endraw %}
         run: |
           gh issue edit $ISSUE_URL --add-label "triage"
@@ -72,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - env:
-          GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
+          GH_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
           ISSUE_URL: {% raw %}${{ github.event.issue.html_url }}{% endraw %}
         run: |
           gh issue edit $ISSUE_URL --add-label "triage"
@@ -126,8 +125,6 @@ You can use activity types and filters to further control when your workflow wil
 
 ## Defining inputs, outputs, and secrets for reusable workflows
 
-{% data reusables.actions.reusable-workflows-enterprise-beta %}
-
 You can define inputs and secrets that a reusable workflow should receive from a calling workflow. You can also specify outputs that a reusable workflow will make available to a calling workflow. For more information, see "[AUTOTITLE](/actions/using-workflows/reusing-workflows)."
 
 ## Using event information
@@ -174,7 +171,7 @@ jobs:
     steps:
       - name: "Comment about changes we can't accept"
         env:
-          GITHUB_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
+          GH_TOKEN: {% raw %}${{ secrets.GITHUB_TOKEN }}{% endraw %}
           PR: {% raw %}${{ github.event.pull_request.html_url }}{% endraw %}
         run: |
           gh pr edit $PR --add-label 'invalid'

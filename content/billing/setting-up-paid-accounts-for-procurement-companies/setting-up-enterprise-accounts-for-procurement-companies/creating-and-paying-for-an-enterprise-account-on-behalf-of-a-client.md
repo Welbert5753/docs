@@ -18,11 +18,13 @@ Before you start, make sure you know:
 - The {% data variables.product.prodname_dotcom %} username of the client who will become the owner of the enterprise account you create
 - The name your client would like to use for the enterprise account
 - The email address where you would like receipts to be sent
-- The number of paid seats your client would like you to purchase for the enterprise account (see "[AUTOTITLE](/billing/managing-billing-for-your-github-account/about-per-user-pricing)")
+- The number of paid seats your client would like you to purchase for the enterprise account (see "[AUTOTITLE](/billing/managing-the-plan-for-your-github-account/about-per-user-pricing)")
 
 ## Step 1: Create your personal account on {% data variables.product.prodname_dotcom %}
 
 You will use your personal account to set up the enterprise account. You'll also need to sign in to this account to renew or make changes to your client's subscription in the future.
+
+If you already have a personal account on {% data variables.product.prodname_dotcom %}, skip to [step 2](#step-2-create-the-enterprise-account).
 
 {% data reusables.billing.create-personal-account %}
 

@@ -1,8 +1,9 @@
-A user is considered active if the user has performed any of the following activities on {% ifversion fpt or ghes %}{% data variables.location.product_location %}{% elsif ghae %}{% data variables.product.product_name %}{% elsif ghec %}your enterprise{% endif %}.
+A user is considered active if the user has performed any of the following activities on {% ifversion fpt or ghes %}{% data variables.location.product_location %}{% elsif ghec %}your enterprise{% endif %}.
 
 - {% ifversion ghec%}Authenticating to access your enterprise's resources via SAML SSO{% else %}Signing into {% data variables.location.product_location %} {% endif %}
 - Creating a repository
-- Pushing to a repository
+- Pushing to a repository via HTTPS
+{% ifversion ghes %}- Pushing to a repository via SSH{% endif %}
 - Being added to a repository
 - Changing the visibility of a repository
 - Creating an issue or pull request

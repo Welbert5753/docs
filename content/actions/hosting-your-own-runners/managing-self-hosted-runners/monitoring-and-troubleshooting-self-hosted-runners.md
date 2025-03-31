@@ -9,13 +9,12 @@ redirect_from:
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 type: tutorial
 defaultPlatform: linux
 shortTitle: Monitor & troubleshoot
 ---
- 
+
 {% data reusables.actions.enterprise-github-hosted-runners %}
 
 {% ifversion actions-disable-repo-runners %}
@@ -34,6 +33,7 @@ You may not be able to create a self-hosted runner for an organization-owned rep
 
 {% data reusables.actions.self-hosted-runner-navigate-repo-and-org %}
 {% data reusables.organizations.settings-sidebar-actions-runners %}
+
 1. Under "Runners", you can view a list of registered runners, including the runner's name, labels, and status.
 
     The status can be one of the following:
@@ -67,7 +67,7 @@ For example:
 {% endlinux %}
 {% windows %}
 
-```shell
+```powershell
 run.cmd --check --url https://github.com/YOUR-ORG/YOUR-REPO --pat GHP_ABCD1234
 ```
 
@@ -87,27 +87,49 @@ By default, the self-hosted runner application verifies the TLS certificate for 
 
 To disable TLS certification verification in the self-hosted runner application, set the `GITHUB_ACTIONS_RUNNER_TLS_NO_VERIFY` environment variable to `1` before configuring and running the self-hosted runner application.
 
+{% linux %}
+
 ```shell
 export GITHUB_ACTIONS_RUNNER_TLS_NO_VERIFY=1
 ./config.sh --url https://github.com/YOUR-ORG/YOUR-REPO --token
 ./run.sh
 ```
 
-{% warning %}
+{% endlinux %}
+{% mac %}
 
-**Warning**: Disabling TLS verification is not recommended since TLS provides privacy and data integrity between the self-hosted runner application and {% data variables.product.product_name %}. We recommend that you install the {% data variables.product.product_name %} certificate in the operating system certificate store for your self-hosted runner. For guidance on how to install the {% data variables.product.product_name %} certificate, check with your operating system vendor.
+```shell
+export GITHUB_ACTIONS_RUNNER_TLS_NO_VERIFY=1
+./config.sh --url https://github.com/YOUR-ORG/YOUR-REPO --token
+./run.sh
+```
 
-{% endwarning %}
+{% endmac %}
+{% windows %}
+
+```powershell
+[Environment]::SetEnvironmentVariable('GITHUB_ACTIONS_RUNNER_TLS_NO_VERIFY', '1')
+./config.cmd --url https://github.com/YOUR-ORG/YOUR-REPO --token
+./run.cmd
+```
+
+{% endwindows %}
+
+> [!WARNING]
+> Disabling TLS verification is not recommended since TLS provides privacy and data integrity between the self-hosted runner application and {% data variables.product.product_name %}. We recommend that you install the {% data variables.product.product_name %} certificate in the operating system certificate store for your self-hosted runner. For guidance on how to install the {% data variables.product.product_name %} certificate, check with your operating system vendor.
 
 ## Reviewing the self-hosted runner application log files
 
-You can monitor the status of the self-hosted runner application and its activities. Log files are kept in the `_diag` directory where you installed the runner application, and a new log is generated each time the application is started. The filename begins with _Runner__, and is followed by a UTC timestamp of when the application was started.
+You can monitor the status of the self-hosted runner application and its activities. Log files are kept in the `_diag` directory where you installed the runner application, and a new log is generated each time the application is started. The filename begins with `Runner_`, and is followed by a UTC timestamp of when the application was started.
 
-For detailed logs on workflow job executions, see the next section describing the _Worker__ files.
+> [!WARNING]
+> Runner application log files for ephemeral runners must be forwarded and preserved externally for troubleshooting and diagnostic purposes. For more information about ephemeral runners and autoscaling self-hosted runners, see "[AUTOTITLE](/actions/hosting-your-own-runners/managing-self-hosted-runners/autoscaling-with-self-hosted-runners#using-ephemeral-runners-for-autoscaling)."
+
+For detailed logs on workflow job executions, see the next section describing the `Worker_` files.
 
 ## Reviewing a job's log file
 
-The self-hosted runner application creates a detailed log file for each job that it processes. These files are stored in the `_diag` directory where you installed the runner application, and the filename begins with _Worker__.
+The self-hosted runner application creates a detailed log file for each job that it processes. These files are stored in the `_diag` directory where you installed the runner application, and the filename begins with `Worker_`.
 
 {% linux %}
 
@@ -184,14 +206,14 @@ If you want to customize the self-hosted runner application service, do not dire
 
 For Windows-based self-hosted runners running the application as a service, you can use PowerShell to monitor their real-time activity. The service uses the naming convention `GitHub Actions Runner (<org>-<repo>.<runnerName>)`. You can also find the service's name by checking the _.service_ file in the runner directory:
 
-```shell
+```powershell
 PS C:\actions-runner> Get-Content .service
 actions.runner.octo-org-octo-repo.runner01.service
 ```
 
 You can view the status of the runner in the Windows _Services_ application (`services.msc`). You can also use PowerShell to check whether the service is running:
 
-```shell
+```powershell
 PS C:\actions-runner> Get-Service "actions.runner.octo-org-octo-repo.runner01.service" | Select-Object Name, Status
 Name                                                  Status
 ----                                                  ------
@@ -200,7 +222,7 @@ actions.runner.octo-org-octo-repo.runner01.service    Running
 
 You can use PowerShell to check the recent activity of the self-hosted runner. In this example output, you can see the application start, receive a job named `testAction`, and then display the resulting status:
 
-```shell
+```powershell
 PS C:\actions-runner> Get-EventLog -LogName Application -Source ActionsRunnerService
 
    Index Time          EntryType   Source                 InstanceID Message
@@ -221,7 +243,7 @@ PS C:\actions-runner> Get-EventLog -LogName Application -Source ActionsRunnerSer
 
 We recommend that you regularly check the automatic update process, as the self-hosted runner will not be able to process jobs if it falls below a certain version threshold. The self-hosted runner application automatically updates itself, but note that this process does not include any updates to the operating system or other software; you will need to separately manage these updates.
 
-You can view the update activities in the _Runner__ log files. For example:
+You can view the update activities in the `Runner_` log files. For example:
 
 ```shell
 [Feb 12 12:37:07 INFO SelfUpdater] An update is available.
@@ -286,7 +308,7 @@ If your build fails with the following error:
 Error: Input required and not supplied: java-version
 ```
 
-Check which Docker engine is installed on your self-hosted runner. To pass the inputs of an action into the Docker container, the runner uses environment variables that might contain dashes as part of their names. The action may not able to get the inputs if the Docker engine is not a binary executable, but is instead a shell wrapper or a link (for example, a Docker engine installed on Linux using `snap`). To address this error, configure your self-hosted runner to use a different Docker engine.
+Check which Docker engine is installed on your self-hosted runner. To pass the inputs of an action into the Docker container, the runner uses environment variables that might contain dashes as part of their names. The action may not be able to get the inputs if the Docker engine is not a binary executable, but is instead a shell wrapper or a link (for example, a Docker engine installed on Linux using `snap`). To address this error, configure your self-hosted runner to use a different Docker engine.
 
 To check if your Docker engine was installed using `snap`, use the `which` command. In the following example, the Docker engine was installed using `snap`:
 

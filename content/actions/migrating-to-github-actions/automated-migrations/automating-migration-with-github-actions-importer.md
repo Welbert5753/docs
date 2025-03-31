@@ -7,7 +7,6 @@ versions:
   fpt: '*'
   ghec: '*'
   ghes: '*'
-  ghae: '*'
 type: how_to
 topics:
   - Migration
@@ -15,14 +14,14 @@ topics:
   - CD
 shortTitle: 'Automate migration with {% data variables.product.prodname_actions_importer %}'
 ---
- 
+
 {% data reusables.actions.enterprise-github-hosted-runners %}
 
 [Legal notice](#legal-notice)
 
 ## About {% data variables.product.prodname_actions_importer %}
 
-You can use {% data variables.product.prodname_actions_importer %} to plan and automatically migrate your CI/CD pipelines to {% data variables.product.prodname_actions %} from Azure DevOps, CircleCI, GitLab, Jenkins, and Travis CI.
+You can use {% data variables.product.prodname_actions_importer %} to plan and automatically migrate your CI/CD supported pipelines to {% data variables.product.prodname_actions %}.
 
 {% data variables.product.prodname_actions_importer %} is distributed as a Docker container, and uses a [{% data variables.product.prodname_dotcom %} CLI](https://cli.github.com) extension to interact with the container.
 
@@ -34,6 +33,7 @@ You can use {% data variables.product.prodname_actions_importer %} to migrate fr
 
 - Azure DevOps
 - Bamboo
+- Bitbucket Pipelines
 - CircleCI
 - GitLab
 - Jenkins
@@ -155,7 +155,7 @@ Commands:
   circle-ci     Convert a CircleCI pipeline to GitHub Actions workflows and open a pull request with the changes.
   gitlab        Convert a GitLab pipeline to a GitHub Actions workflow and open a pull request with the changes.
   jenkins       Convert a Jenkins job to a GitHub Actions workflow and open a pull request with the changes.
-  travis-ci     Convert a Travis CI pipeline to a GitHub Actions workflow and and open a pull request with the changes.
+  travis-ci     Convert a Travis CI pipeline to a GitHub Actions workflow and open a pull request with the changes.
 ```
 
 ## Performing self-serve migrations using IssueOps

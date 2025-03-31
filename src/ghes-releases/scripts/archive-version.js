@@ -15,11 +15,11 @@ import { program } from 'commander'
 import { rimraf } from 'rimraf'
 import http from 'http'
 
-import createApp from '../../../lib/app.js'
-import EnterpriseServerReleases from '../../../lib/enterprise-server-releases.js'
-import loadRedirects from '../../../lib/redirects/precompile.js'
-import { loadPageMap } from '../../../lib/page-data.js'
-import { languageKeys } from '../../../lib/languages.js'
+import createApp from '#src/frame/lib/app.js'
+import EnterpriseServerReleases from '#src/versions/lib/enterprise-server-releases.js'
+import loadRedirects from '#src/redirects/lib/precompile.js'
+import { loadPageMap, loadPages } from '#src/frame/lib/page-data.js'
+import { languageKeys } from '#src/languages/lib/languages.js'
 
 const port = '4001'
 const host = `http://localhost:${port}`
@@ -28,23 +28,29 @@ const REMOTE_ENTERPRISE_STORAGE_URL = 'https://githubdocs.azureedge.net/enterpri
 
 program
   .description(
-    'Scrape HTML of the oldest supported Enterprise version and add it to a temp output directory.'
+    'Scrape HTML of the oldest supported Enterprise version and add it to a temp output directory.',
   )
   .option(
     '-o, --output <PATH>',
-    `output directory to place scraped HTML files and redirects. By default, this temp directory is named 'tmpArchivalDir_<VERSION_TO_DEPRECATE>'`
+    `output directory to place scraped HTML files and redirects. By default, this temp directory is named 'tmpArchivalDir_<VERSION_TO_DEPRECATE>'`,
   )
   .option('-l, --local-dev', 'Do not rewrite asset paths to enable testing scraped content locally')
   .option('-d, --dry-run', 'only scrape the first 10 pages for testing purposes')
   .option(
     '-p, --page <PATH>',
-    'Note: this option is only used to re-scrape a page after the version was deprecated. Redirects will not be re-created because most of the deprecated content is already removed. This option scrapes a specific page in all languages. Pass the relative path to the page without a version or language prefix. ex: /admin/release-notes'
+    'Note: this option is only used to re-scrape a page after the version was deprecated. Redirects will not be re-created because most of the deprecated content is already removed. This option scrapes a specific page in all languages. Pass the relative path to the page without a version or language prefix. ex: /admin/release-notes',
   )
   .parse(process.argv)
 
 const output = program.opts().output
 const dryRun = program.opts().dryRun
 const singlePage = program.opts().page
+if (singlePage && dryRun) {
+  console.log(
+    'A dry run cannot be performed when the --page/-p option is used because a dry run scrapes 10 pages at a time.',
+  )
+  process.exit(1)
+}
 const localDev = program.opts().localDev
 const tmpArchivalDirectory = output
   ? path.join(process.cwd(), output)
@@ -78,7 +84,7 @@ class RewriteAssetPathsPlugin {
         // Remove nextjs scripts and manifest.json link
         newBody = newBody.replace(
           /<script\ssrc="(\.\.\/)*_next\/static\/[\w]+\/(_buildManifest|_ssgManifest).js?".*?><\/script>/g,
-          ''
+          '',
         )
         newBody = newBody.replace(/<link href=".*manifest.json".*?>/g, '')
 
@@ -89,7 +95,7 @@ class RewriteAssetPathsPlugin {
             (match, attribute, basepath) => {
               const replaced = `${REMOTE_ENTERPRISE_STORAGE_URL}/${this.version}/${basepath}`
               return `${attribute}="${replaced}`
-            }
+            },
           )
         }
       }
@@ -106,7 +112,7 @@ class RewriteAssetPathsPlugin {
             (match, attribute, paren, basepath) => {
               const replaced = `${REMOTE_ENTERPRISE_STORAGE_URL}/${this.version}/${basepath}`
               return `${attribute}${paren}${replaced}`
-            }
+            },
           )
         }
       }
@@ -118,38 +124,33 @@ class RewriteAssetPathsPlugin {
 }
 
 async function main() {
-  // Build the production assets, to simulate a production deployment
-  console.log('Finish building production assets')
-  if (dryRun) {
-    console.log(
-      '\nThis is a dry run! Creating HTML for redirects and scraping the first 10 pages only.'
-    )
-  }
+  console.log(`Archiving Enterprise version: ${version}`)
+
+  let pageList, urls
   if (singlePage) {
-    console.log(`\nScraping HTML for a single page only ${singlePage}.`)
-  }
-  console.log(`Enterprise version to archive: ${version}`)
-  const pageName =
-    singlePage && singlePage.trim().startsWith('/') ? singlePage.slice(1) : singlePage
-  const pageMap = singlePage
-    ? languageKeys.map((key) => `/${key}/enterprise-server@${version}/${pageName}`)
-    : await loadPageMap()
-  const permalinksPerVersion = singlePage
-    ? pageMap
-    : Object.keys(pageMap).filter((key) => key.includes(`/enterprise-server@${version}`))
-
-  const urls = dryRun
-    ? permalinksPerVersion.slice(0, 10).map((href) => `${host}${href}`)
-    : permalinksPerVersion.map((href) => `${host}${href}`)
-
-  console.log(`Found ${urls.length} pages for version ${version}`)
-
-  if (dryRun || singlePage) {
-    console.log(`\nScraping html for these pages only:\n${urls.join('\n')}\n`)
+    const pageName = singlePage.trim().startsWith('/') ? singlePage.slice(1) : singlePage
+    const urls = languageKeys
+      .map((key) => `/${key}/enterprise-server@${version}/${pageName}`)
+      .map((href) => `${host}${href}`)
+    console.log(`\nScraping HTML for a single page only:\n${urls.join('\n')}\n`)
+  } else {
+    pageList = await loadPages(undefined, languageKeys)
+    const pageMap = await loadPageMap(pageList)
+    const permalinksPerVersion = Object.keys(pageMap)
+      .filter((key) => key.includes(`/enterprise-server@${version}`))
+      .map((href) => `${host}${href}`)
+    urls = dryRun ? permalinksPerVersion.slice(0, 10) : permalinksPerVersion
+    if (dryRun) {
+      console.log(
+        `\nThis is a dry run! Creating HTML for redirects and scraping the first 10 pages only:\n${urls.join('\n')}\n`,
+      )
+    } else {
+      console.log(`Found ${urls.length} pages for version ${version}`)
+    }
   }
 
   // remove temp directory
-  rimraf.sync(tmpArchivalDirectory)
+  await rimraf(tmpArchivalDirectory)
 
   const app = createApp()
   const server = http.createServer(app)
@@ -175,17 +176,13 @@ async function main() {
 
       fs.renameSync(
         path.join(tmpArchivalDirectory, `/localhost_${port}`),
-        path.join(tmpArchivalDirectory, version)
+        path.join(tmpArchivalDirectory, version),
       )
 
       console.log(`\n\ndone scraping! added files to ${tmpArchivalDirectory}\n`)
       if (!singlePage) {
         // create redirect html files to preserve frontmatter redirects
-        await createRedirectsFile(
-          permalinksPerVersion,
-          pageMap,
-          path.join(tmpArchivalDirectory, version)
-        )
+        await createRedirectsFile(pageList, path.join(tmpArchivalDirectory, version))
         console.log(`next step: deprecate ${version} in lib/enterprise-server-releases.js`)
       } else {
         console.log('🏁 Scraping a single page is complete')
@@ -198,10 +195,9 @@ async function main() {
     })
 }
 
-async function createRedirectsFile(permalinks, pageMap, outputDirectory) {
+async function createRedirectsFile(pageList, outputDirectory) {
   console.log('Creating redirects file...')
-  const pagesPerVersion = permalinks.map((permalink) => pageMap[permalink])
-  const redirects = await loadRedirects(pagesPerVersion, pageMap)
+  const redirects = await loadRedirects(pageList)
   const redirectsPerVersion = {}
 
   Object.entries(redirects).forEach(([oldPath, newPath]) => {
@@ -221,7 +217,7 @@ async function createRedirectsFile(permalinks, pageMap, outputDirectory) {
 
   fs.writeFileSync(
     path.join(outputDirectory, 'redirects.json'),
-    JSON.stringify(redirectsPerVersion, null, 2)
+    JSON.stringify(redirectsPerVersion, null, 2),
   )
   console.log(`Wrote ${outputDirectory}/redirects.json`)
 }

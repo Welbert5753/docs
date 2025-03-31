@@ -8,7 +8,6 @@ redirect_from:
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 topics:
   - Community
@@ -45,18 +44,14 @@ assignees: octocat
 
 {% endif %}
 
-{% ifversion fpt or ghes or ghec %}
-
 {% data reusables.repositories.default-issue-templates %}
-
-{% endif %}
 
 ## Adding an issue template
 
 {% data reusables.repositories.navigate-to-repo %}
 {% data reusables.files.add-file %}
 1. In the file name field:
-    -  To make your issue template visible in the repository's root directory, type the name of your _issue_template_. For example, `issue_template.md`.
+    - To make your issue template visible in the repository's root directory, type the name of your _issue_template_. For example, `issue_template.md`.
     - To make your issue template visible in the repository's `docs` directory, type _docs/_ followed by the name of your _issue_template_. For example, `docs/issue_template.md`,
     - To store your file in a hidden directory, type _.github/_ followed by the name of your _issue_template_. For example, `.github/issue_template.md`.
     - To create multiple issue templates and use the `template` query parameter to specify a template to fill the issue body, type _.github/ISSUE_TEMPLATE/_, then the name of your issue template. For example, `.github/ISSUE_TEMPLATE/issue_template.md`. You can also store multiple issue templates in an `ISSUE_TEMPLATE` subdirectory within the root or `docs/` directories. For more information, see "[AUTOTITLE](/issues/tracking-your-work-with-issues/creating-an-issue)."

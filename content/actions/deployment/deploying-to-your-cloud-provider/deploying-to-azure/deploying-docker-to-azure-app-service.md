@@ -4,7 +4,6 @@ intro: You can deploy a Docker container to Azure App Service as part of your co
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 type: tutorial
 topics:
@@ -13,22 +12,18 @@ topics:
   - Docker
   - Azure App Service
 ---
- 
+
 {% data reusables.actions.enterprise-github-hosted-runners %}
 
 ## Introduction
 
 This guide explains how to use {% data variables.product.prodname_actions %} to build and deploy a Docker container to [Azure App Service](https://azure.microsoft.com/services/app-service/).
 
-{% ifversion fpt or ghec or ghes > 3.4 %}
-
 {% note %}
 
 **Note**: {% data reusables.actions.about-oidc-short-overview %} and "[AUTOTITLE](/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-azure)."
 
 {% endnote %}
-
-{% endif %}
 
 ## Prerequisites
 
@@ -40,7 +35,7 @@ Before creating your {% data variables.product.prodname_actions %} workflow, you
 
    For example, you can use the Azure CLI to create an Azure App Service web app:
 
-   ```bash copy
+   ```shell copy
    az webapp create \
        --name MY_WEBAPP_NAME \
        --plan MY_APP_SERVICE_PLAN \
@@ -63,8 +58,7 @@ Before creating your {% data variables.product.prodname_actions %} workflow, you
         --name MY_WEBAPP_NAME \
         --resource-group MY_RESOURCE_GROUP \
         --settings DOCKER_REGISTRY_SERVER_URL=https://ghcr.io DOCKER_REGISTRY_SERVER_USERNAME=MY_REPOSITORY_OWNER DOCKER_REGISTRY_SERVER_PASSWORD=MY_PERSONAL_ACCESS_TOKEN
-
-```
+   ```
 
 1. Optionally, configure a deployment environment. {% data reusables.actions.about-environments %}
 

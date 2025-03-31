@@ -37,13 +37,13 @@ To configure an LMS to connect to {% data variables.product.prodname_classroom %
 
 ## Linking a Canvas course with a classroom
 
-You can link your Moodle course with a classroom in {% data variables.product.prodname_classroom %}. For more information about Canvas, see the [Canvas website](https://www.instructure.com/canvas/).
+You can link your Canvas course with a classroom in {% data variables.product.prodname_classroom %}. For more information about Canvas, see the [Canvas website](https://www.instructure.com/canvas/).
 
 An administrator needs to register your LMS instance with classroom before you can link an LMS course. For more information, see "[AUTOTITLE](/education/manage-coursework-with-github-classroom/teach-with-github-classroom/register-a-learning-management-system-with-github-classroom#configuring-canvas-for-github-classroom)."
 
 1. Sign into [Canvas](https://www.instructure.com/canvas/#login).
 1. Select the Canvas course to integrate with {% data variables.product.prodname_classroom %}.
-1. Click "Settings" in the left sidebar, then click the "Apps" tab.
+1. Click **Setting** in the left sidebar, then click the **Apps** tab.
 1. Click the **+ App** button.
 1. Under "Configuration Type", select **By Client ID** from the dropdown menu.
 1. Under "Client ID", input the Client ID that your LMS administrator created when registering your LMS instance with {% data variables.product.prodname_classroom %}.

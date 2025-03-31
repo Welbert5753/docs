@@ -9,6 +9,6 @@ topics:
 children:
   - /configuring-github-copilot-settings-on-githubcom
   - /configuring-github-copilot-in-your-environment
-  - /configuring-github-copilot-settings-in-your-organization
+  - /installing-the-github-copilot-extension-in-your-environment
+  - /configuring-network-settings-for-github-copilot
 ---
-

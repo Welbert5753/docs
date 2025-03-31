@@ -5,7 +5,7 @@ intro: Use OpenID Connect within your workflows to authenticate with cloud provi
 versions:
   fpt: '*'
   ghec: '*'
-  ghes: '>=3.5'
+  ghes: '*'
 type: tutorial
 topics:
   - Security
@@ -33,6 +33,8 @@ To update your workflows for OIDC, you will need to make two changes to your YAM
 
 If your cloud provider doesn't yet offer an official action, you can update your workflows to perform these steps manually.
 
+{% data reusables.actions.oidc-deployment-protection-rules %}
+
 ### Adding permissions settings
 
  {% data reusables.actions.oidc-permissions-token %}
@@ -40,6 +42,8 @@ If your cloud provider doesn't yet offer an official action, you can update your
 ### Using official actions
 
 If your cloud provider has created an official action for using OIDC with {% data variables.product.prodname_actions %}, it will allow you to easily exchange the OIDC token for an access token. You can then update your workflows to use this token when accessing cloud resources.
+
+For example, Alibaba Cloud created [`aliyun/configure-aliyun-credentials-action`](https://github.com/aliyun/configure-aliyun-credentials-action) to integrate with using OIDC with {% data variables.product.prodname_dotcom %}.
 
 ## Using custom actions
 
@@ -77,7 +81,7 @@ jobs:
 
 ### Requesting the JWT using environment variables
 
-The following example demonstrates how to use enviroment variables to request a JSON Web Token.
+The following example demonstrates how to use environment variables to request a JSON Web Token.
 
 For your deployment job, you will need to define the token settings, using `actions/github-script` with the `core` toolkit. For more information, see "[AUTOTITLE](/actions/creating-actions/creating-a-javascript-action#adding-actions-toolkit-packages)."
 
@@ -132,4 +136,11 @@ The steps for exchanging the OIDC token for an access token will vary for each c
 ### Accessing resources in your cloud provider
 
 Once you've obtained the access token, you can use specific cloud actions or scripts to authenticate to the cloud provider and deploy to its resources. These steps could differ for each cloud provider.
+
+For example, Alibaba Cloud maintains their own instructions for OIDC authentication. For more information, see [Overview of OIDC-based SSO](https://www.alibabacloud.com/help/en/ram/user-guide/overview-of-oidc-based-sso) in the Alibaba Cloud documentation.
+
 In addition, the default expiration time of this access token could vary between each cloud and can be configurable at the cloud provider's side.
+
+## Further reading
+
+{% data reusables.actions.oidc-further-reading %}

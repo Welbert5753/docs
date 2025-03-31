@@ -48,7 +48,7 @@ If you publish a package in a registry that only supports repository-scoped perm
 
 ## Configuring access to packages for your personal account
 
-If you have admin permissions to a package that's scoped to a personal account, you can assign read, write, or admin roles to other users. For more information about these permission roles, see "[Visibility and access permissions for packages](#visibility-and-access-permissions-for-packages)."
+If you have admin permissions to a package that's scoped to a personal account, you can assign read, write, or admin roles to other users. For more information about these permission roles, see "[About inheritance of access permissions](#about-inheritance-of-access-permissions)."
 
 If your package is private or internal and scoped to an organization, then you can only give access to other organization members or teams.
 
@@ -60,7 +60,7 @@ The selected users will automatically be given access and don't need to accept a
 
 ## Configuring access to packages for an organization
 
-If you have admin permissions to a package that is scoped to an organization, you can assign read, write, or admin roles to other users and teams. For more information about these permission roles, see "[Visibility and access permissions for packages](#visibility-and-access-permissions-for-packages)."
+If you have admin permissions to a package that is scoped to an organization, you can assign read, write, or admin roles to other users and teams. For more information about these permission roles, see "[About inheritance of access permissions](#about-inheritance-of-access-permissions)."
 
 If your package is private or internal and scoped to an organization, then you can only give access to other organization members or teams.
 
@@ -75,7 +75,7 @@ The selected users or teams will automatically be given access and don't need to
 
 ## Selecting whether a package inherits permissions from a repository
 
-{% ifversion packages-inherit-permissions %}By default, if publish a package that is linked to a repository, the package inherits{% else %}If you link a package to a repository, you can choose whether or not the package inherits{% endif %} the access permissions of the linked repository. We recommend you let packages inherit their permissions from a repository, because this simplifies the process of managing access to a package.
+{% ifversion packages-inherit-permissions %}By default, if you publish a package that is linked to a repository, the package inherits{% else %}If you link a package to a repository, you can choose whether or not the package inherits{% endif %} the access permissions of the linked repository. We recommend you let packages inherit their permissions from a repository, because this simplifies the process of managing access to a package.
 
 When a package inherits permissions from a repository, to grant or remove access to your package, you must configure the permissions of the linked repository.
 
@@ -134,12 +134,15 @@ For packages scoped to a personal account or an organization, to ensure that a {
 The specified repository does not need to be the repository where the source code for the package is kept. You can give multiple repositories workflow access to a package.
 
 {% ifversion packages-inherit-permissions %}
-If you publish a package that is linked to a repository, {% data variables.product.prodname_actions %} workflows in the linked repository automatically get access to the package, unless your organization has disabled the automatic inheritance of access permissions. For more information, see "[About inheritance of access permissions and visibility](#about-inheritance-of-access-permissions-and-visibility)" above.
+If you publish a package that is linked to a repository, {% data variables.product.prodname_actions %} workflows in the linked repository automatically get access to the package, unless your organization has disabled the automatic inheritance of access permissions. For more information, see "[About inheritance of access permissions](#about-inheritance-of-access-permissions)" above.
 {% endif %}
 
 {% note %}
 
-**Note:** Syncing your package with a repository {% data variables.package_registry.package-settings-actions-access-menu %} is different than connecting your package to a repository. For more information about linking a repository to your package, see "[AUTOTITLE](/packages/learn-github-packages/connecting-a-repository-to-a-package)."
+**Notes:**
+- Syncing your package with a repository {% data variables.package_registry.package-settings-actions-access-menu %} is different than connecting your package to a repository. For more information about linking a repository to your package, see "[AUTOTITLE](/packages/learn-github-packages/connecting-a-repository-to-a-package)."
+- You can choose to limit permissions to workflow jobs usings the `permissions` key and `packages` scope. For more information, see "[AUTOTITLE](/actions/using-jobs/assigning-permissions-to-jobs)."
+- {% data reusables.package_registry.public-forks-private-packages %}
 
 {% endnote %}
 
@@ -193,7 +196,7 @@ Once you've selected the package you're interested in sharing with codespaces in
 
 ## Configuring visibility of packages for your personal account
 
-When you first publish a package that is scoped to your personal account, the default visibility is private and only you can see the package. You can modify a private or public  package's access by changing the access settings. Once you make your package public, you cannot make your package private again.
+When you first publish a package that is scoped to your personal account, the default visibility is private and only you can see the package. You can modify a private or public  package's access by changing the access settings.
 
 {% data reusables.package_registry.package-settings-option %}
 1. At the bottom of the page, under "Danger Zone", click **Change visibility**.
@@ -227,10 +230,12 @@ When you first publish a package, the default visibility is private and only you
 {% data reusables.package_registry.package-settings-option %}
 1. At the bottom of the page, under "Danger Zone", click **Change visibility** and choose a visibility setting:
     - To make the package visible to anyone, click **Public**.
-     {% warning %}
 
-     **Warning:** Once you make a package public, you cannot make it private again.
+      {% warning %}
 
-     {% endwarning %}
+      **Warning:** Once you make a package public, you cannot make it private again.
+
+      {% endwarning %}
+
     - To make the package visible to a custom selection of people in your organization, click **Private**.{% ifversion not fpt %}
     - To make the package visible to all organization members, click **Internal**. If the organization belongs to an enterprise, the packages will be visible to all enterprise members.{% endif %}

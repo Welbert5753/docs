@@ -10,7 +10,6 @@ redirect_from:
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 type: how_to
 topics:
@@ -71,30 +70,7 @@ An action's listing page includes the action's version and the workflow syntax r
 
 If an action is defined in the same repository where your workflow file uses the action, you can reference the action with either the ‌`{owner}/{repo}@{ref}` or `./path/to/dir` syntax in your workflow file.
 
-Example repository file structure:
-
-```
-|-- hello-world (repository)
-|   |__ .github
-|       └── workflows
-|           └── my-first-workflow.yml
-|       └── actions
-|           |__ hello-world-action
-|               └── action.yml
-```
-
-Example workflow file:
-
-```yaml
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      # This step checks out a copy of your repository.
-      - uses: {% data reusables.actions.action-checkout %}
-      # This step references the directory that contains the action.
-      - uses: ./.github/actions/hello-world-action
-```
+{% data reusables.actions.workflows.section-referencing-an-action-from-the-same-repository %}
 
 The `action.yml` file is used to provide metadata for the action. Learn about the content of this file in "[AUTOTITLE](/actions/creating-actions/metadata-syntax-for-github-actions)."
 
@@ -126,6 +102,10 @@ jobs:
 
 For some examples of Docker actions, see the [Docker-image.yml workflow](https://github.com/actions/starter-workflows/blob/main/ci/docker-image.yml) and "[AUTOTITLE](/actions/creating-actions/creating-a-docker-container-action)."
 
+### Security hardening for using actions in your workflows
+
+{% data reusables.actions.about-security-hardening-for-worklows %}
+
 ## Using release management for your custom actions
 
 The creators of a community action have the option to use tags, branches, or SHA values to manage releases of the action. Similar to any dependency, you should indicate the version of the action you'd like to use based on your comfort with automatically accepting updates to the action.
@@ -134,7 +114,7 @@ You will designate the version of the action in your workflow file. Check the ac
 
 {% note %}
 
-**Note:** We recommend that you use a SHA value when using third-party actions. For more information, see [Security hardening for GitHub Actions](/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions)
+**Note:** We recommend that you use a SHA value when using third-party actions. However, it's important to note {% data variables.product.prodname_dependabot %} will only create {% data variables.product.prodname_dependabot_alerts %} for vulnerable {% data variables.product.prodname_actions %} that use semantic versioning. For more information, see "[AUTOTITLE](/actions/security-guides/security-hardening-for-github-actions#using-third-party-actions)" and "[AUTOTITLE](/code-security/dependabot/dependabot-alerts/about-dependabot-alerts)."
 
 {% endnote %}
 
@@ -187,13 +167,6 @@ outputs:
   results-file: # id of output
     description: "Path to results file"
 ```
-
-{% ifversion ghae %}
-
-## Using the actions included with {% data variables.product.prodname_ghe_managed %}
-
-By default, you can use most of the official {% data variables.product.prodname_dotcom %}-authored actions in {% data variables.product.prodname_ghe_managed %}. For more information, see "[AUTOTITLE](/admin/github-actions/using-github-actions-in-github-ae/using-actions-in-github-ae)."
-{% endif %}
 
 ## Next steps
 

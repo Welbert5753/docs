@@ -18,7 +18,7 @@ The site search is part of every version of docs.github.com. This endpoint respo
 You can also query our search endpoint directly at:
 `https://docs.github.com/search?version=<VERSION>&language=<LANGUAGE CODE>&filters=topics:<TOPIC>&query=<QUERY>`
 
-- The VERSION can be any numbered GitHub Enterprise Server version (e.g., `2.22`, `3.0`), GitHub AE (`ghae`), or the Free pro team plan (`dotcom`).
+- The VERSION can be any numbered supported GitHub Enterprise Server version (e.g., `3.12`), Enterprise Cloud (`ghec`), or the Free pro team plan (`dotcom`).
 - The LANGUAGE CODE can be one of: `zh`, `es`, `pt`, `ru`, `ja`, `fr`, `de`, `ko`
 - TOPIC can be any topics in [the allowed list of topics](/data/allowed-topics.js). The values in the `topics` attribute are **not** case sensitive, so filtering on `GitHub actions` or `github actions` will return the same result. **Note:** Currently, the topics filter only works for the dotcom version in the English language. We plan to expand this search query to other languages and versions in the future.
 - Any search QUERY you'd like.
@@ -85,7 +85,7 @@ Why do we need this? For our daily shipping needs, it's tolerable that search up
 - [components/lib/search.ts](components/lib/search.ts) - The browser-side code that enables search.
 - [lib/search/client.js](lib/search/client.js) - A thin wrapper around the Node.js module for interacting with the search API.
 - [lib/search/search-index.js](lib/search/search-index.js) - A class for generating structured search data from repository content and syncing it. This class has built-in validation to ensure that all records are valid before they're uploaded. This class also takes care of removing deprecated records, and compares existing remote records with the latest local records to avoid uploading records that haven't changed.
-- [script/sync-search-indices.js](script/sync-search-indices.js) - The script used by the Actions workflow to update search indices. This can also be [run in the development environment](#development).
+- [src/search/scripts/sync-search-indices.js](src/search/scripts/sync-search-indices.js) - The script used by the Actions workflow to update search indices. This can also be [run in the development environment](#development).
 - [tests/content/search.js](tests/content/search.js) - Tests!
 
 ## Indices
@@ -108,7 +108,7 @@ Index Name | Description
 
 Each record represents a section of a page. Sections are derived by splitting up pages by their headings. Each record has a `title`, `intro` (if one exists in the frontmatter), `body` content (in text, not HTML), a `url`, and a unique `objectID` that is currently just the permalink of the article. Here's an example:
 
-```js
+```javascript
 {
   objectID: '/en/actions/creating-actions/about-actions#about-actions',
   url: 'https://docs.github.com/en/actions/creating-actions/about-actions#about-actions',

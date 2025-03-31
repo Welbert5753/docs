@@ -33,7 +33,7 @@ To restore a backup of {% data variables.location.product_location %} with {% da
    ```
 
 1. Configure the destination instance to use the same external storage service for {% data variables.product.prodname_actions %} as the source instance by entering one of the following commands.
-{% indented_data_reference reusables.actions.configure-storage-provider-platform-commands spaces=3 %}
+   {% data reusables.actions.configure-storage-provider-platform-commands %}
 {% data reusables.actions.configure-storage-provider %}
 1. To prepare to enable {% data variables.product.prodname_actions %} on the destination instance, enter the following command.
 
@@ -44,3 +44,10 @@ To restore a backup of {% data variables.location.product_location %} with {% da
 {% data reusables.actions.apply-configuration-and-enable %}
 1. After {% data variables.product.prodname_actions %} is configured and enabled, to restore the rest of the data from the backup, use the `ghe-restore` command. For more information, see "[AUTOTITLE](/admin/configuration/configuring-your-enterprise/configuring-backups-on-your-appliance#restoring-a-backup)."
 1. Re-register your self-hosted runners on the destination instance. For more information, see "[AUTOTITLE](/actions/hosting-your-own-runners/managing-self-hosted-runners/adding-self-hosted-runners)."
+1. {% ifversion ghes < 3.12 %}Optionally, to{% else %}To{% endif %} ensure that the bundled actions that are pre-installed on your new instance are up to date, enter the following command.
+
+   ```shell copy
+   ghe-config --unset 'app.actions.actions-repos-sha1sum'
+   ```
+
+   {% data reusables.enterprise.apply-configuration %}

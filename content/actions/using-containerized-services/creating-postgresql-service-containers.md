@@ -9,7 +9,6 @@ redirect_from:
 versions:
   fpt: '*'
   ghes: '*'
-  ghae: '*'
   ghec: '*'
 type: tutorial
 topics:
@@ -67,6 +66,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
 
     steps:
       # Downloads a copy of the code in your repository before running CI tests
@@ -120,6 +122,9 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
 ```
 
 ### Configuring the steps for jobs in containers
@@ -325,7 +330,7 @@ The script creates a table and populates it with placeholder data. To test that 
 
 When you run this workflow, you should see the following output in the "Connect to PostgreSQL" step, which confirms that you successfully created the PostgreSQL table and added data:
 
-```
+```text
 null [ { id: 1,
     firstname: 'Mona the',
     lastname: 'Octocat',
